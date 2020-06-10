@@ -1,0 +1,8 @@
+output/*
+logs/*
+doc/*
+test/*
+app-test/*
+coverage/*
+node_modules/*
+dist/*
