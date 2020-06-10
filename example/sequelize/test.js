@@ -1,18 +1,11 @@
 const Sequelize = require('sequelize');
-const { BaseSequelizeDao, } = require('../../lib');
 
-module.exports = class TestDao extends BaseSequelizeDao {
+module.exports = class TestDao {
   constructor (props) {
-    super(props);
-    this.database = 'sync';
-    this.init();
-  }
-
-  init () {
-    super.init();
+    this.table = props.$sequelize.sync;
 
     const { STRING, } = Sequelize;
-    this.table = this.$db.define('base_sync', {
+    this.table = this.table.define('base_sync', {
       syncid: { type: STRING, },
       name: { type: STRING, },
     }, {

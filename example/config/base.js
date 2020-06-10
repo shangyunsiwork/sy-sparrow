@@ -14,4 +14,7 @@ export default {
     // params 之后  schame 之前的钩子
     beforeRouter: async (ctx, next) => { await next(); },
   },
+  isMonitor: true,
+  sentry: '',
+  version: require(process.cwd() + '/package.json').version,
 };

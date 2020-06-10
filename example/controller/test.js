@@ -1,7 +1,7 @@
 
 import { RouterDerocator, BaseContextModel, } from '../../lib';
 
-@RouterDerocator.Controller('/test')
+@RouterDerocator.Controller('/api/test')
 class TestController extends BaseContextModel {
   @RouterDerocator.Get('/list')
   async list () {

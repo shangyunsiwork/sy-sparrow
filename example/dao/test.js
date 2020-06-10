@@ -9,7 +9,6 @@ module.exports = class Connection extends BaseMysqlDao {
    */
   constructor (props) {
     super(props);
-    this.database = 'sync';
     this.tableName = 'base_sync';
     this.defaultFields = [
       'syncid',
@@ -22,7 +21,7 @@ module.exports = class Connection extends BaseMysqlDao {
       'mtime',
       'email',
     ];
-    this.init();
+    this.mysql = props.$mysql.sync;
   }
   /*
    * 查询
@@ -34,7 +33,7 @@ module.exports = class Connection extends BaseMysqlDao {
       this.defaultFields,
       this.tableName,
     ]);
-    let [ res, ] = await this.query(searchSql);
+    let [ res, ] = await this.mysql.query(searchSql);
     assert.ok(!isEmpty(res), new XError(30000, '同步服务不存在'));
     return res;
   }
