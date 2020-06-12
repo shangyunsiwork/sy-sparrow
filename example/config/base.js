@@ -1,3 +1,5 @@
+import mdRes from '../middleware';
+
 export default {
   logger: console,
   name: 'sparrow-example',
@@ -15,6 +17,7 @@ export default {
     beforeRouter: async (ctx, next) => { await next(); },
   },
   isMonitor: true,
+  mdRewrite: [ mdRes, ],
   sentry: '',
   version: require(process.cwd() + '/package.json').version,
 };

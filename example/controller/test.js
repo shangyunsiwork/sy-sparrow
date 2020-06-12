@@ -5,7 +5,7 @@ import { RouterDerocator, BaseContextModel, } from '../../lib';
 class TestController extends BaseContextModel {
   @RouterDerocator.Get('/list')
   async list () {
-    this.app.ctx.body = await this.services.test.list();
+    this.ctx.body = await this.services.test.list();
   }
 }
 
