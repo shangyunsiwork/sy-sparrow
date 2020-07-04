@@ -2,13 +2,13 @@
  * @Author: shangyun.si
  * @Date: 2020-06-10 14:34:52
  * @Last Modified by: shangyun.si
- * @Last Modified time: 2020-07-05 00:11:01
+ * @Last Modified time: 2020-07-05 00:43:36
  */
 /* eslint-disable security/detect-object-injection */
 'use strict';
 
-const Joi = require('@hapi/joi');
-const isEmpty = require('../utils/isEmpty');
+import Joi from '@hapi/joi';
+import { isEmpty, } from '../utils/utils';
 
 const paramFormat = () => {
   return async function (ctx, next) {
@@ -68,7 +68,7 @@ const paramSchema = (schema) => {
   };
 };
 
-module.exports = {
+export default {
   paramFormat,
   paramSchema,
 };

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { BaseMysqlDao, } from '../../lib';
-import { XError, isEmpty, } from '@xy/util';
+import { XError, isEmpty, } from '../utils/utils';
 
 module.exports = class Connection extends BaseMysqlDao {
   /**

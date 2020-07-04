@@ -1,8 +1,8 @@
 /*
  * @Author: shangyun.si
  * @Date: 2020-07-05 00:08:13
- * @Last Modified by:   shangyun.si
- * @Last Modified time: 2020-07-05 00:08:13
+ * @Last Modified by: shangyun.si
+ * @Last Modified time: 2020-07-05 00:44:13
  */
 
 // https://github.com/posquit0/koa-rest-api-boilerplate
@@ -81,4 +81,4 @@ function responseHandler () {
   };
 }
 
-module.exports = responseHandler;
+export default responseHandler;

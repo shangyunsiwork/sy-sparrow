@@ -1,4 +1,4 @@
-import mdRes from '../middleware';
+import middleware from '../middleware';
 
 export default {
   logger: console,
@@ -17,7 +17,7 @@ export default {
     beforeRouter: async (ctx, next) => { await next(); },
   },
   isMonitor: true,
-  mdRewrite: [ mdRes, ],
+  middleware: middleware,
   sentry: '',
   version: require(process.cwd() + '/package.json').version,
 };
