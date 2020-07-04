@@ -1,8 +1,8 @@
 /*
  * @Author: shangyun.si
  * @Date: 2020-07-05 00:07:30
- * @Last Modified by:   shangyun.si
- * @Last Modified time: 2020-07-05 00:07:30
+ * @Last Modified by: shangyun.si
+ * @Last Modified time: 2020-07-05 00:44:44
  */
 
 'use strict';
@@ -45,4 +45,4 @@ function errorHandler () {
   };
 }
 
-module.exports = errorHandler;
+export default errorHandler;

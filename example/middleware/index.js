@@ -1,86 +1,108 @@
 /*
- * @Author: highsea.高海
- * @Date: 2019-01-14 10:39:50
- * @Copyright(c) QuVideo F2E Team
- * @Email: hai.gao@quvideo.com
+ * @Author: shangyun.si
+ * @Date: 2020-07-05 00:07:43
+ * @Last Modified by: shangyun.si
+ * @Last Modified time: 2020-07-05 00:46:07
  */
-// https://github.com/posquit0/koa-rest-api-boilerplate
 
 'use strict';
 
-// const Log = console;
+// Load APM on production environment
+// const apm = require('./apm');
+
+import koaBody from 'koa-body';
+import cors from '@koa/cors';
+import views from 'koa-views';
+import errorHandler from './errorHandler';
+import favicon from 'koa-favicon';
+import serve from 'koa-static';
+import requestId from './requestId';
+import responseHandler from './responseHandler';
+import { join, parse, } from 'path';
+
+import logMiddleware from './log';
+import bunyan from 'bunyan';
+// const loggerConfig = require('../config/logger.js');
+
 /**
- * HTTP Status codes
+ * 日志处理中间件
  */
-const statusCodes = {
-  CONTINUE: 100,
-  OK: 200,
-  CREATED: 201,
-  ACCEPTED: 202,
-  NO_CONTENT: 204,
-  BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  REQUEST_TIMEOUT: 408,
-  UNPROCESSABLE_ENTITY: 422,
-  INTERNAL_SERVER_ERROR: 500,
-  NOT_IMPLEMENTED: 501,
-  BAD_GATEWAY: 502,
-  SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIME_OUT: 504,
-};
+const mdLogger = logMiddleware({
+  logger: bunyan.createLogger(
+    Object.assign(
+      {
+        serializers: bunyan.stdSerializers,
+        name: '123',
+        streams: [],
+      },
+    )
+  ),
+});
 
-// TODO 业务错误码列表
-// 10000: 系统错误码
-// ...
-// 20000: 成功
-// ...
-// 20001: 参数错误
-// ...
-// 40000: 缓存错误
-// ...
-// 50000: DB错误
-// ...
-// 60000: 文件错误
+/**
+ * 生成请求 uuid
+ */
+const mdRequestId = requestId();
 
-function responseHandler () {
-  return async (ctx, next) => {
-    ctx.res.statusCodes = statusCodes;
-    ctx.statusCodes = ctx.res.statusCodes;
+/**
+ * 格式化 from， text， json 数据
+ */
+const mdKoaBody = koaBody({
+  enableTypes: [ 'json', 'form', 'text', ],
+  textLimit: '2mb',
+  formLimit: '1mb',
+  jsonLimit: '5mb',
+  strict: true,
+  multipart: true,
+  onerror: function (err, ctx) {
+    ctx.throw(422, new Error(`body parse error: ${err}`), { bcode: 20011, });
+  },
+});
 
-    // ctx.res.success = ({ statusCode, data = null, message = null, }) => {
-    //   if (!!statusCode && statusCode < 400) ctx.status = statusCode;
-    //   else if (!(ctx.status < 400)) ctx.status = statusCodes.OK;
+/**
+ * 允许跨域
+ */
+const mdcors = cors({
+  origin: '*',
+  allowMethods: [ 'GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', ],
+  // exposeHeaders: [ 'X-Request-Id', ],
+});
 
-    //   ctx.body = { code: 20000, data, message, };
-    // };
+/**
+ * res 格式化处理
+ */
+const mdResHandler = responseHandler();
+/**
+ * res 错误处理
+ */
+const mdErrorHandler = errorHandler();
 
-    ctx.res.fail = ({ statusCode, code, data = null, message = null, }) => {
-      if (!!statusCode && (statusCode >= 400 && statusCode < 500)) ctx.status = statusCode;
-      else if (!(ctx.status >= 400 && ctx.status < 500)) ctx.status = statusCodes.BAD_REQUEST;
-      ctx.body = { code, data, message, };
-    };
+/**
+ * favicon
+ */
+const mdFavicon = favicon(join(process.cwd(), './public/favicon.ico'));
+/*
+ * 静态资源
+ */
+//                          pwd       path.join('public', 'assets')
+const mdAssets = serve(join(process.cwd(), parse('public', 'assets').dir));
 
-    // ctx.res.error = ({ statusCode, code, data = null, message = null, }) => {
-    //   if (!!statusCode && (statusCode >= 500 && statusCode < 600)) ctx.status = statusCode;
-    //   else if (!(ctx.status >= 500 && ctx.status < 600)) ctx.status = statusCodes.INTERNAL_SERVER_ERROR;
+/**
+ * views
+ */
+const mdViews = views(join(__dirname, '..', '/views'), {
+  extension: 'ejs',
+});
 
-    //   ctx.body = { code, data, message, };
-    // };
+export default [
+  mdFavicon,
+  mdAssets,
+  mdViews,
 
-    ctx.res.ok = msg => {
-      ctx.status = statusCodes.OK;
-      // const data = ctx.body;
-      // const message = msg || 'success';
-      // ctx.body = { code: 20000, data, message, };
-    };
-
-    await next();
-  };
-}
-
-module.exports = {
-  index: 5,
-  func: responseHandler(),
-};
+  mdKoaBody,
+  mdcors,
+  mdRequestId,
+  mdLogger,
+  mdResHandler,
+  mdErrorHandler,
+];

@@ -2,16 +2,16 @@
  * @Author: shangyun.si
  * @Date: 2020-07-05 00:07:54
  * @Last Modified by: shangyun.si
- * @Last Modified time: 2020-07-05 00:10:46
+ * @Last Modified time: 2020-07-05 00:44:24
  */
 
 // https://github.com/posquit0/koa-rest-api-boilerplate
 
 'use strict';
 
-const bunyan = require('bunyan');
-const myType = require('../utils/myType');
-const assert = require('assert');
+import bunyan from 'bunyan';
+import { myType, } from '../utils/utils';
+import assert from 'assert';
 
 function reqSerializer (ctx = {}) {
   return {
@@ -88,4 +88,4 @@ function log (options = {}) {
   };
 }
 
-module.exports = log;
+export default log;

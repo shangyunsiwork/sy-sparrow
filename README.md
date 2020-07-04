@@ -62,25 +62,3 @@
 }
 ```
 
-基础工程地址 http://gitlab.quvideo.com/WEB/sparrow-example.git
-
-
-### middleware 重写
-```js
-参数 mdRewrite : [
-  {
-    index: 0,
-    func: () => {}
-  },
-]
-
-[
-  mdFavicon,
-  mdKoaBody,
-  mdcors,
-  mdRequestId,
-  mdLogger,
-  mdResHandler,
-  mdErrorHandler,
-]
-```
